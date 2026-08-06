@@ -1,3 +1,19 @@
+Metadata-Version: 2.4
+Name: cnpj-radar
+Version: 0.1.0
+Summary: Pipeline de dados abertos do CNPJ (Receita Federal): download resiliente, DuckDB e dashboards
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: requests
+Requires-Dist: typer
+Requires-Dist: duckdb
+Requires-Dist: python-dotenv
+Provides-Extra: dashboard
+Requires-Dist: pandas; extra == "dashboard"
+Requires-Dist: pyarrow; extra == "dashboard"
+Requires-Dist: streamlit; extra == "dashboard"
+Requires-Dist: plotly; extra == "dashboard"
+
 # 📡 CNPJ Radar
 
 Pipeline de engenharia de dados de ponta a ponta sobre os **dados abertos do CNPJ** da Receita Federal — o cadastro de todas as empresas do Brasil (60+ milhões de estabelecimentos), atualizado mensalmente.
@@ -26,17 +42,13 @@ O volume (dezenas de GB descompactados) não exige um servidor de banco: o DuckD
 
 ```bash
 pip install -e ".[dashboard]"
-cnpj-radar baixar --grupo refs               # tabelas de referência (CNAEs, municípios…)
-cnpj-radar baixar --grupo estabelecimentos   # ~4,6 GB; use --arquivo p/ uma parte só
-cnpj-radar schema                            # cria os schemas no DuckDB
+cnpj-radar pastas               # lista as remessas mensais disponíveis
+cnpj-radar baixar --grupo refs  # tabelas de referência (CNAEs, municípios…)
+cnpj-radar schema               # cria a staging no DuckDB
 cnpj-radar carregar --grupo refs
-cnpj-radar carregar --grupo estabelecimentos
-cnpj-radar transformar                       # staging → marts + agregados
-cnpj-radar exportar --remessa 2026-07-12     # Parquet + meta.json para o dashboard
-streamlit run dashboard/app.py
 ```
 
-Grupos disponíveis: `refs`, `empresas`, `estabelecimentos`, `socios`, `simples` — ou um arquivo específico com `--arquivo Estabelecimentos1`. `cnpj-radar pastas` lista as remessas disponíveis.
+Grupos disponíveis: `refs`, `empresas`, `estabelecimentos`, `socios`, `simples` — ou um arquivo específico com `--arquivo Estabelecimentos1`.
 
 ## Fonte dos dados
 
@@ -57,13 +69,10 @@ data/             (fora do git) zips, CSVs e banco local
 
 - [x] Downloader com novas tentativas e retomada (HTTP Range)
 - [x] Extração streaming latin-1 → UTF-8 (sem estourar memória)
-- [x] Staging completa no DuckDB via COPY (escape de aspas dobradas incluso)
-- [x] Modelo analítico `marts` (tipos, datas seguras, dimensões CNAE/setor/município)
-- [x] Checks de qualidade de dados (`cnpj-radar checar`)
-- [x] Agregados Parquet + meta (`cnpj-radar exportar`)
-- [x] Dashboard Streamlit (com smoke test headless)
-- [ ] Carga completa da base (10/10 partes)
-- [ ] Publicação do dashboard (Streamlit Community Cloud)
+- [x] Staging completa no DuckDB via COPY
+- [ ] Modelo analítico (datas seguras, tipos, dimensões CNAE/município)
+- [ ] Checks de qualidade de dados
+- [ ] Agregados Parquet + dashboard Streamlit publicado
 - [ ] Dashboard Power BI (publish to web)
 - [ ] Alternativa PostgreSQL via Docker
 

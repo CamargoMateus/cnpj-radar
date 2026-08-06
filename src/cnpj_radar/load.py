@@ -31,8 +31,9 @@ def tabela_do_arquivo(caminho: Path) -> str:
 def carregar_csv(con: duckdb.DuckDBPyConnection, caminho: Path) -> int:
     """COPY do CSV para a tabela staging correspondente. Retorna as linhas inseridas."""
     tabela = tabela_do_arquivo(caminho)
+    # escape '"' cobre aspas dobradas dentro de campos, ex.: "NIGTH CLUB ""TUTU"" LTDA"
     resultado = con.execute(
         f"copy {tabela} from '{caminho.as_posix()}' "
-        "(format csv, delimiter ';', quote '\"', header false)"
+        "(format csv, delimiter ';', quote '\"', escape '\"', header false)"
     ).fetchone()
     return int(resultado[0]) if resultado else -1

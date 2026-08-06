@@ -1,0 +1,10 @@
+requests
+typer
+duckdb
+python-dotenv
+
+[dashboard]
+pandas
+pyarrow
+streamlit
+plotly

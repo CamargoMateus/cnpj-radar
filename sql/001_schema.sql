@@ -1,9 +1,10 @@
 -- Schemas do cnpj-radar
 -- staging: espelho fiel dos CSVs da Receita (tudo VARCHAR; tipagem acontece no modelo)
--- cnpj: modelo analítico (criado em 002_transform.sql)
+-- marts: modelo analítico (criado em 002_transform.sql)
+-- (o schema não pode se chamar "cnpj": colidiria com o nome do catálogo cnpj.duckdb)
 
 create schema if not exists staging;
-create schema if not exists cnpj;
+create schema if not exists marts;
 
 -- Tabelas de referência (layout: codigo;descricao)
 create table if not exists staging.cnaes         (codigo varchar, descricao varchar);

@@ -1,0 +1,2 @@
+[console_scripts]
+cnpj-radar = cnpj_radar.cli:app
