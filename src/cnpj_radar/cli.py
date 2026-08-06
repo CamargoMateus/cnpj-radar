@@ -97,11 +97,13 @@ def carregar(
 
 @app.command()
 def transformar() -> None:
-    """Executa as transformações SQL (staging → modelo analítico + agregados)."""
+    """Executa as transformações SQL em ordem (002 em diante; 001 é o schema)."""
     with duckdb.connect(str(DB_PATH)) as con:
-        for arquivo_sql in ["002_transform.sql", "003_agregados.sql"]:
-            con.execute((RAIZ / "sql" / arquivo_sql).read_text(encoding="utf-8"))
-            typer.echo(f"[ok] {arquivo_sql}")
+        for arquivo_sql in sorted((RAIZ / "sql").glob("0*.sql")):
+            if arquivo_sql.name.startswith("001"):
+                continue
+            con.execute(arquivo_sql.read_text(encoding="utf-8"))
+            typer.echo(f"[ok] {arquivo_sql.name}")
 
 
 @app.command()

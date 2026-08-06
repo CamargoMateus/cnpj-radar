@@ -5,6 +5,13 @@
   "agregados": {
     "agg_abertura_mensal": 218161,
     "agg_atividades_ativas": 31373,
-    "agg_situacao": 2800
+    "agg_capital_setor": 20,
+    "agg_dominios_email": 25,
+    "agg_mais_antigas": 20,
+    "agg_municipios": 5572,
+    "agg_nomes_fantasia": 100,
+    "agg_saldo_mensal": 187564,
+    "agg_situacao": 2800,
+    "agg_sobrevivencia": 20293
   }
 }
