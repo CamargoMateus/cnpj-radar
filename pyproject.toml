@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cnpj-radar"
+version = "0.1.0"
+description = "Pipeline de dados abertos do CNPJ (Receita Federal): download resiliente, DuckDB e dashboards"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "requests",
+    "typer",
+    "duckdb",
+    "python-dotenv",
+]
+
+[project.optional-dependencies]
+dashboard = ["pandas", "pyarrow", "streamlit", "plotly"]
+
+[project.scripts]
+cnpj-radar = "cnpj_radar.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
