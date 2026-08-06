@@ -17,6 +17,8 @@ dependencies = [
 
 [project.optional-dependencies]
 dashboard = ["pandas", "pyarrow", "streamlit", "plotly"]
+# playwright: prints das abas do dashboard (scripts/capturar_prints.py)
+dev = ["playwright"]
 
 [project.scripts]
 cnpj-radar = "cnpj_radar.cli:app"

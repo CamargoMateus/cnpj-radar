@@ -39,6 +39,14 @@ def pct(n: float, casas: int = 1) -> str:
     return f"{n:.{casas}f}%".replace(".", ",")
 
 
+def encurtar(texto: str, limite: int = 52) -> str:
+    """Corta pelo meio: o fim das descrições de CNAE é o que distingue nomes parecidos."""
+    if len(texto) <= limite:
+        return texto
+    cabeca = limite - 20
+    return f"{texto[:cabeca].rstrip()}… {texto[-16:].lstrip()}"
+
+
 def layout_base(fig: go.Figure, altura: int) -> go.Figure:
     fig.update_layout(
         height=altura,
@@ -229,15 +237,19 @@ with aba_setores:
             atv.groupby("cnae_descricao", as_index=False)["ativos"].sum()
             .sort_values("ativos", ascending=False).head(10)
         )
-        top["rotulo"] = top["cnae_descricao"].str.slice(0, 48)
-        top.loc[top["cnae_descricao"].str.len() > 48, "rotulo"] += "…"
+        top["rotulo"] = top["cnae_descricao"].map(encurtar)
+        # y numérico: rótulos truncados podem se repetir e o Plotly empilharia as barras
+        posicoes = list(range(len(top)))
         fig4 = go.Figure(go.Bar(
-            x=top["ativos"], y=top["rotulo"], orientation="h",
+            x=top["ativos"], y=posicoes, orientation="h",
             marker=dict(color=S1, line=dict(color=SURFACE, width=2)),
             customdata=[[c, fmt(v)] for c, v in zip(top["cnae_descricao"], top["ativos"])],
             hovertemplate="%{customdata[0]}<br>%{customdata[1]} ativas<extra></extra>",
         ))
-        fig4.update_yaxes(autorange="reversed", tickmode="linear")
+        fig4.update_yaxes(
+            autorange="reversed", tickmode="array",
+            tickvals=posicoes, ticktext=top["rotulo"].tolist(),
+        )
         fig4.update_layout(bargap=0.35)
         st.plotly_chart(layout_base(fig4, 420), width="stretch")
     with col_b:

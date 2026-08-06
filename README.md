@@ -18,6 +18,17 @@ flowchart LR
     E --> G[Dashboard Power BI]
 ```
 
+## O que o painel mostra
+
+| | |
+|---|---|
+| ![Panorama](docs/01-panorama.png) | ![Setores](docs/02-setores.png) |
+| **Panorama:** aberturas por mês com média móvel, marcos históricos (criação do MEI, pandemia) e o saldo entre aberturas e baixas. | **Setores:** treemap do Brasil empresarial, top 10 atividades e capital social mediano por setor. |
+| ![Territórios](docs/03-territorios.png) | ![Sobrevivência](docs/04-sobrevivencia.png) |
+| **Territórios:** mapa por estado, top 15 municípios e composição da situação cadastral em cada UF. | **Sobrevivência:** por ano de abertura, quantas empresas seguem ativas. Das abertas em 2016, só 26% resistiram. |
+
+Tem ainda a aba **Curiosidades**: a empresa ativa mais antiga do país (1891), os nomes fantasia mais repetidos e a fatia de e-mails corporativos que na verdade são Gmail.
+
 ## Por que DuckDB?
 
 O volume (dezenas de GB descompactados) não exige um servidor de banco: o DuckDB carrega e transforma tudo localmente com performance colunar, e o resultado vira Parquet leve para os dashboards. Suporte a PostgreSQL (Docker) está no roadmap como alternativa para cenários multiusuário, e a modelagem SQL é portável.

@@ -64,6 +64,8 @@ from marts.estabelecimentos
 where situacao = 'Ativa'
   and nome_fantasia is not null
   and length(trim(nome_fantasia)) >= 3
+  -- descarta nomes mascarados no cadastro ("****") e afins
+  and regexp_matches(nome_fantasia, '[A-Za-zÀ-ÿ]{3}')
 group by all
 order by ativos desc
 limit 100;
