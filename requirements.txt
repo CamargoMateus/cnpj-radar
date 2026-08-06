@@ -1,0 +1,6 @@
+# Dependências do dashboard hospedado (Streamlit Community Cloud).
+# Para rodar o pipeline completo localmente: pip install -e ".[dashboard]"
+pandas
+plotly
+pyarrow
+streamlit
