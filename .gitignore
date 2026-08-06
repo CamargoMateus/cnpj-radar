@@ -7,3 +7,4 @@ __pycache__/
 *.duckdb.wal
 logs/
 .streamlit/secrets.toml
+src/*.egg-info/
