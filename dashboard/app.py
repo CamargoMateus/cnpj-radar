@@ -75,8 +75,7 @@ st.markdown(
 if meta:
     st.caption(
         f"Remessa {meta.get('remessa') or '—'} · {fmt(meta.get('estabelecimentos_carregados', 0))} "
-        f"estabelecimentos carregados · atualizado em {meta.get('gerado_em', '—')} · "
-        "amostra de demonstração (1 de 10 partes da base)"
+        f"estabelecimentos carregados · atualizado em {meta.get('gerado_em', '—')}"
     )
 
 # ── Filtros globais (valem para todos os gráficos) ──────────────────────────
@@ -109,9 +108,13 @@ aberturas_ult = int(ab.loc[ab["mes"].dt.year == ult_ano_completo, "aberturas"].s
 lider = atv.groupby("cnae_descricao")["ativos"].sum().sort_values(ascending=False)
 k1, k2, k3, k4 = st.columns(4)
 k1.metric("Estabelecimentos", fmt(total))
-k2.metric("Ativos", fmt(ativos), f"{(100 * ativos / total if total else 0):.1f}% do total".replace(".", ","))
+k2.metric(
+    "Ativos", fmt(ativos),
+    f"{(100 * ativos / total if total else 0):.1f}% do total".replace(".", ","),
+    delta_color="off",
+)
 k3.metric(f"Aberturas em {ult_ano_completo}", fmt(aberturas_ult))
-k4.metric("Atividade líder (ativas)", "", help=lider.index[0] if len(lider) else "—")
+k4.metric("Atividade líder (ativas)", fmt(lider.iloc[0]) if len(lider) else "—")
 if len(lider):
     k4.caption(lider.index[0][:70])
 
@@ -155,7 +158,7 @@ with col_a:
         customdata=[[d, fmt(v)] for d, v in zip(top["cnae_descricao"], top["ativos"])],
         hovertemplate="%{customdata[0]}<br>%{customdata[1]} ativas<extra></extra>",
     ))
-    fig2.update_yaxes(autorange="reversed")
+    fig2.update_yaxes(autorange="reversed", tickmode="linear")
     fig2.update_layout(bargap=0.35)
     st.plotly_chart(layout_base(fig2, 460), width="stretch")
     with st.expander("Ver em tabela"):
@@ -194,6 +197,6 @@ with col_b:
 st.divider()
 st.caption(
     "Fonte: dados abertos do CNPJ — Receita Federal (dados públicos). "
-    "Pipeline e código: projeto cnpj-radar. Números refletem a amostra carregada; "
-    "a situação cadastral é a foto da remessa indicada no topo."
+    "Pipeline e código: projeto cnpj-radar. "
+    "A situação cadastral é a foto da remessa indicada no topo."
 )
