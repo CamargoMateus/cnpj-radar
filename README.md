@@ -1,5 +1,7 @@
 # 📡 CNPJ Radar
 
+**Dashboard ao vivo: [cnpj-radar.streamlit.app](https://cnpj-radar.streamlit.app)**
+
 Pipeline de engenharia de dados de ponta a ponta sobre os **dados abertos do CNPJ** da Receita Federal: o cadastro de todas as empresas do Brasil (mais de 72 milhões de estabelecimentos), atualizado mensalmente.
 
 **Download resiliente → extração streaming → DuckDB → agregados Parquet → dashboards.**
