@@ -56,18 +56,24 @@ join marts.dim_municipio m using (municipio_codigo)
 where e.situacao = 'Ativa'
 group by all;
 
--- Aberturas por município e ano. A agg_municipios responde "onde tem mais
--- empresa hoje"; esta responde "onde estão abrindo", que é outra pergunta.
--- Começa em 2000 porque antes disso o dado municipal fica esparso demais.
-create or replace table marts.agg_aberturas_municipio as
+-- Tabela consolidada: uma linha por combinação de ano de abertura, estado,
+-- município, setor e situação cadastral. Sem corte de data, para reproduzir
+-- exatamente os agregados de estoque (agg_municipios, agg_situacao) somando
+-- sobre as outras chaves, e os de fluxo (agg_abertura_mensal) somando por
+-- ano_abertura. É a base que permite cruzar dimensões que os agregados
+-- fechados não cruzam, como "das construtoras abertas em Curitiba em 2020,
+-- quantas seguem ativas".
+create or replace table marts.agg_fato_empresas as
 select
-    m.municipio_nome,
+    year(e.data_inicio) as ano_abertura,
     e.uf,
-    year(e.data_inicio) as ano,
-    count(*)            as aberturas
+    m.municipio_nome,
+    c.setor,
+    e.situacao,
+    count(*)            as quantidade
 from marts.estabelecimentos e
+left join marts.dim_cnae c using (cnae)
 join marts.dim_municipio m using (municipio_codigo)
-where e.data_inicio between date '2000-01-01' and current_date
 group by all;
 
 create or replace table marts.agg_nomes_fantasia as
