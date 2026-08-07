@@ -56,6 +56,20 @@ join marts.dim_municipio m using (municipio_codigo)
 where e.situacao = 'Ativa'
 group by all;
 
+-- Aberturas por município e ano. A agg_municipios responde "onde tem mais
+-- empresa hoje"; esta responde "onde estão abrindo", que é outra pergunta.
+-- Começa em 2000 porque antes disso o dado municipal fica esparso demais.
+create or replace table marts.agg_aberturas_municipio as
+select
+    m.municipio_nome,
+    e.uf,
+    year(e.data_inicio) as ano,
+    count(*)            as aberturas
+from marts.estabelecimentos e
+join marts.dim_municipio m using (municipio_codigo)
+where e.data_inicio between date '2000-01-01' and current_date
+group by all;
+
 create or replace table marts.agg_nomes_fantasia as
 select
     upper(trim(nome_fantasia)) as nome_fantasia,
